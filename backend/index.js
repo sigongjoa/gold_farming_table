@@ -4,11 +4,13 @@ const cors = require('cors'); // CORS 미들웨어를 불러옵니다.
 const itemRoutes = require('./routes/itemRoutes'); // itemRoutes 모듈을 불러옵니다.
 const craftingRoutes = require('./routes/craftingRoutes'); // craftingRoutes 모듈을 불러옵니다.
 const userRoutes = require('./routes/userRoutes'); // 새로운 userRoutes 모듈을 불러옵니다.
+const path = require('path');
 const app = express();
 const port = 3001;
 
 app.use(express.json());
 app.use(cors()); // 모든 도메인에서의 요청을 허용합니다.
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // 데이터베이스 연결 설정 (실제 사용 시에는 .env 파일 등을 통해 관리)
 const dbConfig = {
@@ -40,9 +42,11 @@ async function initializeDatabase() {
 // 서버 시작 전 데이터베이스 초기화
 initializeDatabase();
 
+// 정적 프론트엔드 파일 제공
 app.get('/', (req, res) => {
-  res.send('마비노기 아이템 데이터베이스 API 서버입니다.');
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
+
 
 // 기존의 /items 엔드포인트는 itemRoutes로 대체됩니다.
 // app.get('/items', async (req, res) => {
