@@ -1,5 +1,8 @@
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors'); // CORS 미들웨어를 불러옵니다。
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const dbManager = require('./utils/dbManager'); // dbManager 모듈 불러오기
 const taskRoutes = require('./routes/taskRoutes'); // taskRoutes 추가
@@ -14,10 +17,13 @@ const lifeSkillRoutes = require('./routes/lifeSkillRoutes'); // 새로운 lifeSk
 const characterRoutes = require('./routes/characterRoutes'); // 새로운 characterRoutes 모듈을 불러옵니다.
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
+app.use(helmet());
+app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));
 app.use(express.json());
-app.use(cors()); // 모든 도메인에서의 요청을 허용합니다。
+const corsOptions = { origin: process.env.CORS_ORIGIN || '*' };
+app.use(cors(corsOptions));
 
 async function initializeApp() {
   try {

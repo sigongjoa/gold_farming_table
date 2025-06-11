@@ -11,39 +11,44 @@ const dbConfig = {
   queueLimit: 0
 };
 
+const dbName = process.env.DB_NAME || 'mabinogi_item_db';
+const resetDb = process.env.RESET_DB === 'true';
+
 let mainPool; // 메인 데이터베이스 풀
 
 async function initializeMainPool() {
   let connection;
   try {
-    // 먼저 root 계정으로 연결하여 데이터베이스를 삭제하고 다시 생성합니다.
     connection = await mysql.createConnection(dbConfig);
-    await connection.query('DROP DATABASE IF EXISTS mabinogi_item_db');
-    await connection.query('CREATE DATABASE mabinogi_item_db');
-    console.log('MySQL 메인 데이터베이스 초기화 및 재성공: mabinogi_item_db');
+    if (resetDb) {
+      await connection.query(`DROP DATABASE IF EXISTS \`${dbName}\``);
+    }
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
+    if (resetDb) {
+      console.log(`MySQL 메인 데이터베이스 초기화 완료: ${dbName}`);
+    }
     await connection.end();
 
-    // 새로 생성된 데이터베이스에 연결할 풀 생성
     mainPool = await mysql.createPool({
       ...dbConfig,
-      database: 'mabinogi_item_db',
-      multipleStatements: true // 여러 SQL 문장을 한 번에 실행 허용
+      database: dbName,
+      multipleStatements: true
     });
-    console.log('MySQL 메인 데이터베이스 연결 성공: mabinogi_item_db');
+    console.log(`MySQL 메인 데이터베이스 연결 성공: ${dbName}`);
 
-    // 메인 스키마 적용
-    const schemaPath = path.join(__dirname, '../database/schema.sql');
-    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-    console.log('메인 데이터베이스에 스키마 적용 중...');
-    await mainPool.query(schemaSql);
-    console.log('메인 데이터베이스에 스키마 성공적으로 적용됨.');
+    if (resetDb) {
+      const schemaPath = path.join(__dirname, '../database/schema.sql');
+      const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+      console.log('메인 데이터베이스에 스키마 적용 중...');
+      await mainPool.query(schemaSql);
+      console.log('메인 데이터베이스에 스키마 성공적으로 적용됨.');
 
-    // 시드 데이터 적용
-    const seedPath = path.join(__dirname, '../database/seed.sql');
-    const seedSql = fs.readFileSync(seedPath, 'utf8');
-    console.log('메인 데이터베이스에 시드 데이터 적용 중...');
-    await mainPool.query(seedSql);
-    console.log('메인 데이터베이스에 시드 데이터 성공적으로 적용됨.');
+      const seedPath = path.join(__dirname, '../database/seed.sql');
+      const seedSql = fs.readFileSync(seedPath, 'utf8');
+      console.log('메인 데이터베이스에 시드 데이터 적용 중...');
+      await mainPool.query(seedSql);
+      console.log('메인 데이터베이스에 시드 데이터 성공적으로 적용됨.');
+    }
 
   } catch (err) {
     console.error('MySQL 메인 데이터베이스 연결 실패:', err);
