@@ -1,9 +1,16 @@
 const { getPool } = require('../utils/dbManager');
 
+let itemsCache = { data: null, timestamp: 0 };
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 const getAllItems = async (req, res, dbManager) => {
   try {
+    if (itemsCache.data && Date.now() - itemsCache.timestamp < CACHE_TTL) {
+      return res.json(itemsCache.data);
+    }
     const metaPool = dbManager.getPool();
     const [rows] = await metaPool.query('SELECT * FROM items');
+    itemsCache = { data: rows, timestamp: Date.now() };
     res.json(rows);
   } catch (err) {
     console.error('모든 아이템 조회 오류:', err);
