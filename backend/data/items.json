@@ -1,0 +1,178 @@
+[
+  {
+    "item_id": 1001,
+    "name": "철광석",
+    "item_type": "재료",
+    "source_type": "GATHER",
+    "source_info": "채광",
+    "description": "철을 제련하기 위한 광석",
+    "icon_url": "https://via.placeholder.com/24/FFD700/000000?text=I1001",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1002,
+    "name": "나무판",
+    "item_type": "재료",
+    "source_type": "GATHER",
+    "source_info": "벌목",
+    "description": "다양한 제작에 사용되는 나무 재료",
+    "icon_url": null,
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1003,
+    "name": "몬스터의 가죽",
+    "item_type": "재료",
+    "source_type": "MONSTER",
+    "source_info": "약한 몬스터 드랍",
+    "description": "몬스터에게서 얻은 가죽",
+    "icon_url": null,
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2001,
+    "name": "철괴",
+    "item_type": "재료",
+    "source_type": "CRAFT",
+    "source_info": "철광석 5개로 제작",
+    "description": "철광석을 제련하여 만든 철괴",
+    "icon_url": "https://via.placeholder.com/24/D2B48C/000000?text=I2001",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2002,
+    "name": "가죽 갑옷",
+    "item_type": "방어구",
+    "icon_url": "https://via.placeholder.com/24/8B4513/FFFFFF?text=I2002",
+    "source_type": "견고한 끈 2개, 나무판 1개로 제작",
+    "source_info": "가볍고 유연한 가죽 갑옷",
+    "description": "가볍고 유연한 가죽 갑옷",
+    "stackable": false,
+    "max_stack": 1
+  },
+  {
+    "item_id": 3001,
+    "name": "롱소드",
+    "item_type": "무기",
+    "source_type": "CRAFT",
+    "source_info": "철괴 3개, 나무판 2개로 제작",
+    "description": "초보 모험가에게 적합한 검",
+    "icon_url": "https://via.placeholder.com/24/A9A9A9/000000?text=I1002",
+    "stackable": false,
+    "max_stack": 1
+  },
+  {
+    "item_id": 1004,
+    "name": "통나무",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/8B4513/000000?text=I1004",
+    "source_type": "채집",
+    "source_info": "벌목으로 얻는 원재료",
+    "description": "벌목으로 얻는 원재료",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2003,
+    "name": "목재",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/6B8E23/FFFFFF?text=I2003",
+    "source_type": "제재",
+    "source_info": "나무를 제재하여 얻는 재료",
+    "description": "나무를 제재하여 얻는 재료",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1005,
+    "name": "나무 진액",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/A0522D/FFFFFF?text=I1005",
+    "source_type": "채집",
+    "source_info": "수액 채집으로 얻는 재료",
+    "description": "수액 채집으로 얻는 재료",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2004,
+    "name": "목재+",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/90EE90/000000?text=I2004",
+    "source_type": "제재",
+    "source_info": "정제된 목재",
+    "description": "정제된 목재",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2005,
+    "name": "상급 목재",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/CD853F/FFFFFF?text=I2005",
+    "source_type": "제재",
+    "source_info": "고품질 목재",
+    "description": "고품질 목재",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2006,
+    "name": "상급 목재+",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/D2691E/FFFFFF?text=I2006",
+    "source_type": "제재",
+    "source_info": "최고급 목재",
+    "description": "최고급 목재",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 2007,
+    "name": "부드러운 목재+",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/F4A460/000000?text=I2007",
+    "source_type": "제재",
+    "source_info": "매우 부드러운 목재",
+    "description": "매우 부드러운 목재",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1006,
+    "name": "상급 통나무",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/BC8F8F/000000?text=I1006",
+    "source_type": "채집",
+    "source_info": "고품질 통나무",
+    "description": "고품질 통나무",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1007,
+    "name": "상급 통나무+",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/A52A2A/FFFFFF?text=I1007",
+    "source_type": "채집",
+    "source_info": "최고급 통나무",
+    "description": "최고급 통나무",
+    "stackable": true,
+    "max_stack": 999
+  },
+  {
+    "item_id": 1008,
+    "name": "부드러운 통나무",
+    "item_type": "재료",
+    "icon_url": "https://via.placeholder.com/24/8B0000/FFFFFF?text=I1008",
+    "source_type": "채집",
+    "source_info": "매우 부드러운 통나무",
+    "description": "매우 부드러운 통나무",
+    "stackable": true,
+    "max_stack": 999
+  }
+] 

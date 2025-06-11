@@ -1,0 +1,131 @@
+[
+  {
+    "recipe_id": 1,
+    "result_item_id": 2001,
+    "result_quantity": 1,
+    "required_facility": "대장간",
+    "success_rate": 90.00,
+    "processing_time_seconds": 0,
+    "processing_time_display": "0초",
+    "materials": [
+      {"material_item_id": 1001, "quantity": 5}
+    ]
+  },
+  {
+    "recipe_id": 2,
+    "result_item_id": 1002,
+    "result_quantity": 1,
+    "required_facility": "대장간",
+    "success_rate": 70.00,
+    "processing_time_seconds": 0,
+    "processing_time_display": "0초",
+    "materials": [
+      {"material_item_id": 2001, "quantity": 3},
+      {"material_item_id": 1002, "quantity": 2}
+    ]
+  },
+  {
+    "recipe_id": 3,
+    "result_item_id": 2002,
+    "result_quantity": 1,
+    "required_facility": "재봉틀",
+    "success_rate": 85.00,
+    "processing_time_seconds": 0,
+    "processing_time_display": "0초",
+    "materials": [
+      {"material_item_id": 1003, "quantity": 3}
+    ]
+  },
+  {
+    "recipe_id": 4,
+    "result_item_id": 2002,
+    "result_quantity": 1,
+    "required_facility": "재봉틀",
+    "success_rate": 65.00,
+    "processing_time_seconds": 0,
+    "processing_time_display": "0초",
+    "materials": [
+      {"material_item_id": 2002, "quantity": 2},
+      {"material_item_id": 1002, "quantity": 1}
+    ]
+  },
+  {
+    "recipe_id": 5,
+    "result_item_id": 2001,
+    "result_quantity": 1,
+    "required_facility": "핸디크래프트",
+    "success_rate": 85,
+    "processing_time_seconds": 0,
+    "processing_time_display": "0초",
+    "materials": [
+      { "material_item_id": 1003, "quantity": 3 } 
+    ]
+  },
+  {
+    "recipe_id": 6,
+    "result_item_id": 2003,
+    "result_quantity": 3,
+    "required_facility": "목재 가공 시설 Lv.1",
+    "success_rate": 100,
+    "processing_time_seconds": 90,
+    "processing_time_display": "90초",
+    "materials": [
+      { "material_item_id": 1004, "quantity": 10 } 
+    ]
+  },
+  {
+    "recipe_id": 7,
+    "result_item_id": 2004,
+    "result_quantity": 3,
+    "required_facility": "목재 가공 시설 Lv.1",
+    "success_rate": 100,
+    "processing_time_seconds": 1080,
+    "processing_time_display": "1080초 (18분)",
+    "materials": [
+      { "material_item_id": 2003, "quantity": 3 },
+      { "material_item_id": 1005, "quantity": 4 }
+    ]
+  },
+  {
+    "recipe_id": 8,
+    "result_item_id": 2005,
+    "result_quantity": 3,
+    "required_facility": "목재 가공 시설 Lv.2",
+    "success_rate": 100,
+    "processing_time_seconds": 14400,
+    "processing_time_display": "14400초 (4시간)",
+    "materials": [
+      { "material_item_id": 2004, "quantity": 3 },
+      { "material_item_id": 1006, "quantity": 15 },
+      { "material_item_id": 1005, "quantity": 8 }
+    ]
+  },
+  {
+    "recipe_id": 9,
+    "result_item_id": 2006,
+    "result_quantity": 3,
+    "required_facility": "목재 가공 시설 Lv.3",
+    "success_rate": 100,
+    "processing_time_seconds": 36000,
+    "processing_time_display": "36000초 (10시간)",
+    "materials": [
+      { "material_item_id": 2005, "quantity": 4 },
+      { "material_item_id": 1007, "quantity": 20 },
+      { "material_item_id": 1005, "quantity": 12 }
+    ]
+  },
+  {
+    "recipe_id": 10,
+    "result_item_id": 2007,
+    "result_quantity": 3,
+    "required_facility": "목재 가공 시설 Lv.3",
+    "success_rate": 100,
+    "processing_time_seconds": 14400,
+    "processing_time_display": "14400초 (4시간)",
+    "materials": [
+      { "material_item_id": 2006, "quantity": 15 },
+      { "material_item_id": 1008, "quantity": 30 },
+      { "material_item_id": 1005, "quantity": 30 }
+    ]
+  }
+] 
