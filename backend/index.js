@@ -17,7 +17,7 @@ const lifeSkillRoutes = require('./routes/lifeSkillRoutes'); // 새로운 lifeSk
 const characterRoutes = require('./routes/characterRoutes'); // 새로운 characterRoutes 모듈을 불러옵니다.
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 app.use(helmet());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));

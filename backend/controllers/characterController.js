@@ -92,7 +92,29 @@ const getCharactersByServerAndUser = async (req, res, dbManager) => {
     }
 };
 
+// 특정 사용자의 특정 캐릭터 조회
+const getCharactersByUserIdAndCharacterName = async (req, res, dbManager) => {
+    const { user_id, character_name } = req.params;
+    try {
+        const pool = dbManager.getPool();
+        const [characters] = await pool.query(
+            'SELECT character_id, character_name, db_name FROM characters WHERE user_id = ? AND character_name = ?',
+            [user_id, character_name]
+        );
+
+        if (characters.length === 0) {
+            return res.status(404).json({ message: '캐릭터를 찾을 수 없습니다.' });
+        }
+
+        res.json(characters[0]); // 단일 캐릭터를 반환하므로 첫 번째 항목 반환
+    } catch (err) {
+        console.error('캐릭터 조회 오류:', err);
+        res.status(500).json({ message: '캐릭터를 불러오는 데 실패했습니다.' });
+    }
+};
+
 module.exports = {
     createOrUpdateCharacters,
-    getCharactersByServerAndUser
+    getCharactersByServerAndUser,
+    getCharactersByUserIdAndCharacterName
 }; 

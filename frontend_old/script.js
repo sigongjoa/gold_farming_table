@@ -161,7 +161,7 @@ async function loadCharacters() {
     }
 
     try {
-        const response = await fetch(`${BASE_URL}/characters/${USER_ID}/server/${selectedServer}`);
+        const response = await fetch(`${BASE_URL}/characters/user/${USER_ID}/server/${selectedServer}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

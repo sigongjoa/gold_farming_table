@@ -136,10 +136,30 @@ const getTasksForAllCharacters = async (req, res) => {
     }
 };
 
+// 작업 삭제
+const deleteTask = async (req, res) => {
+    const { taskId } = req.params;
+    const pool = getPool();
+    try {
+        const [result] = await pool.query(
+            'DELETE FROM tasks WHERE id = ?',
+            [taskId]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: '작업을 찾을 수 없습니다.' });
+        }
+        res.status(200).json({ message: '작업이 성공적으로 삭제되었습니다.' });
+    } catch (error) {
+        console.error('작업 삭제 오류:', error);
+        res.status(500).json({ message: '작업 삭제에 실패했습니다.' });
+    }
+};
+
 module.exports = {
     createTask,
     getAllTasks,
     getCharacterTasks,
     updateCharacterTaskCompletion,
-    getTasksForAllCharacters
+    getTasksForAllCharacters,
+    deleteTask
 }; 

@@ -17,4 +17,7 @@ router.get('/all-character-status', taskController.getTasksForAllCharacters);
 // 특정 캐릭터의 작업 완료 상태 업데이트 또는 삽입
 router.put('/:taskId/character/:characterId', taskController.updateCharacterTaskCompletion);
 
+// 작업 삭제
+router.delete('/:taskId', taskController.deleteTask);
+
 module.exports = router; 
