@@ -151,7 +151,75 @@ const getCraftingTree = async (req, res) => {
   }
 };
 
+const getMissingMaterials = async (req, res) => {
+  const { user_id, recipe_id } = req.params;
+  try {
+    const [allItems] = await pool.query('SELECT * FROM items');
+    const [allRecipes] = await pool.query('SELECT * FROM crafting_recipes');
+    const [userInventoryData] = await pool.query(
+      'SELECT * FROM user_inventory WHERE user_id = ?',
+      [user_id]
+    );
+
+    const userInventory = userInventoryData.reduce((acc, item) => {
+      acc[item.item_id] = item.quantity;
+      return acc;
+    }, {});
+
+    const targetRecipe = allRecipes.find(
+      recipe => recipe.recipe_id === Number(recipe_id)
+    );
+
+    if (!targetRecipe) {
+      return res
+        .status(404)
+        .json({ message: '해당 레시피를 찾을 수 없습니다.' });
+    }
+
+    const required = {};
+
+    function accumulateMaterials(recipe, multiplier) {
+      const materials = JSON.parse(recipe.materials);
+      for (const material of materials) {
+        const subRecipe = allRecipes.find(
+          r => r.result_item_id === material.material_item_id
+        );
+        if (subRecipe) {
+          accumulateMaterials(subRecipe, material.quantity * multiplier);
+        } else {
+          required[material.material_item_id] =
+            (required[material.material_item_id] || 0) +
+            material.quantity * multiplier;
+        }
+      }
+    }
+
+    accumulateMaterials(targetRecipe, 1);
+
+    const materialsInfo = Object.entries(required).map(([id, qty]) => {
+      const itemInfo = allItems.find(item => item.item_id === Number(id));
+      const haveQty = userInventory[id] || 0;
+      return {
+        item_id: Number(id),
+        name: itemInfo ? itemInfo.name : '알 수 없는 아이템',
+        icon_url: itemInfo ? itemInfo.icon_url : null,
+        required_quantity: qty,
+        current_quantity: haveQty,
+        missing_quantity: Math.max(qty - haveQty, 0),
+      };
+    });
+
+    res.json({ result_item_id: targetRecipe.result_item_id, materials: materialsInfo });
+  } catch (err) {
+    console.error('오류 발생:', err);
+    res
+      .status(500)
+      .json({ message: '필요 재료를 계산하는 데 실패했습니다.' });
+  }
+};
+
 module.exports = {
   getCraftableItems,
   getCraftingTree,
-}; 
+  getMissingMaterials,
+};
