@@ -1,7 +1,11 @@
 const express = require('express');
-const router = express.Router();
 const craftingController = require('../controllers/craftingController');
 
-router.get('/tree/:result_item_id', craftingController.getCraftingTree);
+module.exports = (dbManager) => {
+  const router = express.Router();
 
-module.exports = router; 
+  // 특정 레시피에 대한 제작 트리 조회
+  router.get('/:serverName/:characterName/:recipe_id/tree', (req, res) => craftingController.getCraftingTree(req, res, dbManager));
+
+  return router;
+}; 

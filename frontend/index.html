@@ -3,87 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제작 계산기</title>
+    <title>마비노기 제작 계산기</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 p-4">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">내 아이템 관리</h1>
-        <table id="inventoryTable" class="min-w-full bg-white shadow mb-6">
-            <thead>
-                <tr>
-                    <th class="px-2 py-1">아이템</th>
-                    <th class="px-2 py-1">수량</th>
-                    <th class="px-2 py-1">변경</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button id="refreshCraftable" class="bg-blue-600 text-white px-4 py-2 rounded">제작 가능 아이템 보기</button>
-        <div id="craftableList" class="mt-4 space-y-2"></div>
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow-md">
+        <h1 class="text-3xl font-bold mb-6 text-center">마비노기 제작 계산기</h1>
+
+        <!-- Tab Navigation -->
+        <div class="mb-4 flex justify-center border-b border-gray-200">
+            <button id="tab-server-char" class="py-2 px-4 text-center font-bold text-lg text-blue-700 border-b-2 border-blue-700 focus:outline-none">서버 및 캐릭터 선택</button>
+            <button id="tab-inventory" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">내 아이템 관리</button>
+            <button id="tab-collection-items" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">채집 아이템 정보</button>
+            <button id="tab-resources" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">재화 정보</button>
+            <button id="tab-quests" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">일일/주간 숙제</button>
+            <button id="tab-character-tasks" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">캐릭터 작업 관리</button>
+            <button id="tab-life-skills" class="py-2 px-4 text-center font-bold text-lg text-gray-500 hover:text-blue-700 focus:outline-none">생활스킬</button>
+        </div>
+
+        <!-- Tab Content: 서버 및 캐릭터 선택 -->
+        <div id="tab-content-server-char" class="tab-content">
+            <div class="mb-6 p-4 border rounded bg-gray-50">
+                <h2 class="text-xl font-semibold mb-3">서버 및 캐릭터 선택</h2>
+                <div class="mb-4">
+                    <label for="serverSelect" class="block text-gray-700 text-sm font-bold mb-2">서버 선택:</label>
+                    <select id="serverSelect" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="">서버를 선택하세요</option>
+                    </select>
+                </div>
+
+                <div id="characterInputFields" class="mb-4">
+                    <h3 class="text-xl font-semibold mb-3">캐릭터 관리</h3>
+                    <p class="text-gray-600 mb-2">캐릭터 이름을 입력하고 저장하세요 (최대 4개).</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="characterNameInput1" class="block text-gray-700 text-sm font-bold mb-1">캐릭터 1:</label>
+                            <div class="flex">
+                                <input type="text" id="characterNameInput1" placeholder="캐릭터 이름" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flex-grow">
+                                <button data-char-index="1" class="select-active-char-btn ml-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">선택</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="characterNameInput2" class="block text-gray-700 text-sm font-bold mb-1">캐릭터 2:</label>
+                            <div class="flex">
+                                <input type="text" id="characterNameInput2" placeholder="캐릭터 이름" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flex-grow">
+                                <button data-char-index="2" class="select-active-char-btn ml-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">선택</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="characterNameInput3" class="block text-gray-700 text-sm font-bold mb-1">캐릭터 3:</label>
+                            <div class="flex">
+                                <input type="text" id="characterNameInput3" placeholder="캐릭터 이름" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flex-grow">
+                                <button data-char-index="3" class="select-active-char-btn ml-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">선택</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="characterNameInput4" class="block text-gray-700 text-sm font-bold mb-1">캐릭터 4:</label>
+                            <div class="flex">
+                                <input type="text" id="characterNameInput4" placeholder="캐릭터 이름" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flex-grow">
+                                <button data-char-index="4" class="select-active-char-btn ml-2 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">선택</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="saveCharactersBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">캐릭터 저장</button>
+                    <button id="loadCharactersBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2">캐릭터 불러오기</button>
+                </div>
+                <p id="currentSelection" class="mt-4 text-gray-600">선택된 서버: 없음, 캐릭터: 없음</p>
+            </div>
+        </div>
+
+        <!-- Tab Content: 내 아이템 관리 -->
+        <div id="tab-content-inventory" class="tab-content hidden">
+            <div id="mainContent">
+                <p id="currentInventorySelection" class="mb-4 text-gray-600">선택된 서버: 없음, 캐릭터: 없음</p>
+                <h2 class="text-2xl font-bold mb-4">내 아이템 관리</h2>
+                <table id="inventoryTable" class="min-w-full bg-white shadow mb-6">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-1 border-b-2 text-left">아이템</th>
+                            <th class="px-2 py-1 border-b-2 text-left">수량</th>
+                            <th class="px-2 py-1 border-b-2 text-left">변경</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button id="refreshCraftable" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">제작 가능 아이템 보기</button>
+                <div id="craftableList" class="mt-4 space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Tab Content: 채집 아이템 정보 -->
+        <div id="tab-content-collection-items" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-4">마비노기 채집 아이템 정보</h2>
+            <table id="collectionItemsTable" class="min-w-full bg-white shadow mb-6">
+                <thead>
+                    <tr>
+                        <th class="px-2 py-1 border-b-2 text-left">아이템명</th>
+                        <th class="px-2 py-1 border-b-2 text-left">채집 방식</th>
+                        <th class="px-2 py-1 border-b-2 text-left">채집 대상</th>
+                        <th class="px-2 py-1 border-b-2 text-left">필요 레벨</th>
+                        <th class="px-2 py-1 border-b-2 text-left">활용 예시</th>
+                    </tr>
+                </thead>
+                <tbody id="collectionItemsTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Tab Content: 재화 정보 -->
+        <div id="tab-content-resources" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-4">재화 정보</h2>
+            <div class="mb-4 p-4 border rounded bg-gray-50">
+                <h3 class="text-xl font-semibold mb-3">은동전</h3>
+                <p class="mb-2">현재 수량: <span id="silverCoinsCurrent">0</span> / 100</p>
+                <p class="mb-2">최대 수량까지 남은 시간: <span id="silverCoinsTimeToFull">계산 중...</span></p>
+                <div class="flex items-center mb-2">
+                    <input type="number" id="silverCoinsChangeInput" placeholder="변경 수량" class="shadow appearance-none border rounded w-24 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <button id="addSilverCoinsBtn" class="ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">추가</button>
+                    <button id="useSilverCoinsBtn" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">사용</button>
+                </div>
+            </div>
+
+            <div class="mb-4 p-4 border rounded bg-gray-50">
+                <h3 class="text-xl font-semibold mb-3">마족 공물</h3>
+                <p class="mb-2">현재 수량: <span id="demonTributeCurrent">0</span> / 2</p>
+                <p class="mb-2">최대 수량까지 남은 시간: <span id="demonTributeTimeToFull">계산 중...</span></p>
+                <div class="flex items-center mb-2">
+                    <input type="number" id="demonTributeChangeInput" placeholder="변경 수량" class="shadow appearance-none border rounded w-24 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <button id="addDemonTributeBtn" class="ml-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">추가</button>
+                    <button id="useDemonTributeBtn" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">사용</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: 일일/주간 숙제 -->
+        <div id="tab-content-quests" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-4">일일/주간 숙제 관리</h2>
+
+            <div class="mb-6 p-4 border rounded bg-gray-50">
+                <h3 class="text-xl font-semibold mb-3">일일 숙제</h3>
+                <button id="resetDailyQuestsBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mb-4">일일 숙제 초기화</button>
+                <table class="min-w-full bg-white shadow mb-6">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-1 border-b-2 text-left">숙제명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">설명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">완료 여부</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyQuestsTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="mb-6 p-4 border rounded bg-gray-50">
+                <h3 class="text-xl font-semibold mb-3">주간 숙제</h3>
+                <button id="resetWeeklyQuestsBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mb-4">주간 숙제 초기화</button>
+                <table class="min-w-full bg-white shadow mb-6">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-1 border-b-2 text-left">숙제명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">설명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">완료 여부</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weeklyQuestsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Content: 캐릭터 작업 관리 -->
+        <div id="tab-content-character-tasks" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-4">캐릭터 작업 관리</h2>
+            <div class="mb-4">
+                <label for="newTaskInput" class="block text-gray-700 text-sm font-bold mb-2">새 작업 추가:</label>
+                <div class="flex">
+                    <input type="text" id="newTaskInput" placeholder="새 작업명을 입력하세요" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flex-grow">
+                    <button id="addTaskBtn" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">작업 추가</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="characterTasksTable" class="min-w-full bg-white shadow mb-6">
+                    <thead>
+                        <tr>
+                            <th class="px-2 py-1 border-b-2 text-left">작업명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">서버명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">캐릭터명</th>
+                            <th class="px-2 py-1 border-b-2 text-left">진행여부</th>
+                        </tr>
+                    </thead>
+                    <tbody id="characterTasksTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Content: 생활스킬 -->
+        <div id="tab-content-life-skills" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-4">생활스킬</h2>
+            <p id="currentLifeSkillsSelection" class="mb-4 text-gray-600">선택된 서버: 없음, 캐릭터: 없음</p>
+            <div id="lifeSkillsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Life skills will be dynamically loaded here -->
+            </div>
+        </div>
     </div>
 
-<script>
-const USER_ID = 1;
-async function loadInventory() {
-    const res = await fetch(`/users/${USER_ID}/inventory`);
-    const data = await res.json();
-    const tbody = document.querySelector('#inventoryTable tbody');
-    tbody.innerHTML = '';
-    data.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="border px-2 py-1 flex items-center space-x-2">
-                ${item.icon_url ? `<img src="${item.icon_url}" class="w-6 h-6"/>` : ''}
-                <span>${item.item_name}</span>
-            </td>
-            <td class="border px-2 py-1"><input type="number" min="0" value="${item.quantity}" class="w-20 border" /></td>
-            <td class="border px-2 py-1"><button class="bg-green-600 text-white px-2 py-1 rounded save-btn" data-item="${item.item_id}">저장</button></td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-async function updateQuantity(itemId, quantity) {
-    await fetch(`/users/${USER_ID}/inventory/${itemId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: Number(quantity) })
-    });
-}
-
-document.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('save-btn')) {
-        const itemId = e.target.dataset.item;
-        const qtyInput = e.target.closest('tr').querySelector('input');
-        await updateQuantity(itemId, qtyInput.value);
-        loadInventory();
-    } else if (e.target.classList.contains('missing-btn')) {
-        const recipeId = e.target.dataset.recipe;
-        const res = await fetch(`/users/${USER_ID}/missing-materials/${recipeId}`);
-        const data = await res.json();
-        alert(data.materials.map(m => `${m.name}: ${m.missing_quantity}`).join('\n'));
-    }
-});
-
-document.getElementById('refreshCraftable').addEventListener('click', async () => {
-    const res = await fetch(`/users/${USER_ID}/craftable-items`);
-    const data = await res.json();
-    const container = document.getElementById('craftableList');
-    container.innerHTML = '';
-    data.forEach(recipe => {
-        const div = document.createElement('div');
-        div.className = 'bg-white p-2 shadow flex items-center justify-between';
-        div.innerHTML = `
-            <div class="flex items-center space-x-2">
-                ${recipe.result_item_icon_url ? `<img src="${recipe.result_item_icon_url}" class="w-6 h-6"/>` : ''}
-                <span>${recipe.result_item_name} (제작 가능: ${recipe.craftable_quantity})</span>
-            </div>
-            <button class="bg-gray-700 text-white px-2 py-1 rounded missing-btn" data-recipe="${recipe.recipe_id}">부족 재료</button>`;
-        container.appendChild(div);
-    });
-});
-
-loadInventory();
-</script>
+    <script src="script.js"></script>
 </body>
 </html>

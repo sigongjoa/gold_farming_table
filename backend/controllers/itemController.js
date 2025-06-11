@@ -1,10 +1,28 @@
-const getItems = async (req, res, pool) => {
+const { getPool } = require('../utils/dbManager');
+
+const getAllItems = async (req, res, dbManager) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM items');
+    const metaPool = dbManager.getPool();
+    const [rows] = await metaPool.query('SELECT * FROM items');
     res.json(rows);
   } catch (err) {
-    console.error('아이템 조회 오류:', err);
-    res.status(500).send('아이템을 불러오는 데 실패했습니다.');
+    console.error('모든 아이템 조회 오류:', err);
+    res.status(500).json({ message: '아이템을 불러오는 데 실패했습니다.' });
+  }
+};
+
+const getItemById = async (req, res, dbManager) => {
+  const { item_id } = req.params;
+  try {
+    const metaPool = dbManager.getPool();
+    const [rows] = await metaPool.query('SELECT * FROM items WHERE item_id = ?', [item_id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: '아이템을 찾을 수 없습니다.' });
+    }
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('아이템 ID로 조회 오류:', err);
+    res.status(500).json({ message: '아이템을 불러오는 데 실패했습니다.' });
   }
 };
 
@@ -91,7 +109,54 @@ const getItemDetails = async (req, res, pool) => {
   }
 };
 
+const getUserInventory = async (req, res, dbManager) => {
+  const userId = 1; // For now, we'll use a hardcoded user ID. This should be replaced with actual user authentication.
+  try {
+    const pool = dbManager.getPool();
+    // 모든 아이템을 가져오고, user_inventory와 LEFT JOIN하여 수량을 가져옵니다.
+    const [rows] = await pool.query(`
+      SELECT 
+        i.id AS item_id, 
+        i.name, 
+        i.description, 
+        i.category, 
+        i.collection_target, 
+        i.required_level, 
+        i.usage_details, 
+        COALESCE(ui.quantity, 0) AS quantity
+      FROM items i
+      LEFT JOIN user_inventory ui ON i.id = ui.item_id AND ui.user_id = ?
+      WHERE i.category IN ('나무 베기', '광석 캐기', '약초 채집', '양털 깎기', '호미질', '곤충 채집', '낚시 채집', '일상 채집', '곡물 추수')
+      ORDER BY i.name
+    `, [userId]);
+    res.json(rows);
+  } catch (err) {
+    console.error('사용자 인벤토리 조회 오류:', err);
+    res.status(500).json({ message: '사용자 인벤토리를 불러오는 데 실패했습니다.' });
+  }
+};
+
+const updateUserItemQuantity = async (req, res, dbManager) => {
+  const userId = 1; // For now, we'll use a hardcoded user ID. This should be replaced with actual user authentication.
+  const { item_id, quantity } = req.body;
+  try {
+    const pool = dbManager.getPool();
+    // Check if the item exists in the user's inventory, if not, insert it, otherwise update
+    const [result] = await pool.query(
+      'INSERT INTO user_inventory (user_id, item_id, quantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantity = VALUES(quantity)',
+      [userId, item_id, quantity]
+    );
+    res.json({ message: '아이템 수량 업데이트 성공', changes: result.changedRows });
+  } catch (err) {
+    console.error('아이템 수량 업데이트 오류:', err);
+    res.status(500).json({ message: '아이템 수량 업데이트에 실패했습니다.' });
+  }
+};
+
 module.exports = {
-  getItems,
-  getItemDetails
+  getAllItems,
+  getItemById,
+  getItemDetails,
+  getUserInventory,
+  updateUserItemQuantity
 }; 

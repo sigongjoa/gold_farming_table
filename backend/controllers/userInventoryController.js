@@ -1,148 +1,89 @@
-const fs = require('fs');
-const path = require('path');
+const { getPool } = require('../utils/dbManager');
 
-const itemsPath = path.join(__dirname, '../data/items.json');
-const userInventoryPath = path.join(__dirname, '../data/user_inventory.json');
+const getUserInventory = async (req, res, dbManager) => {
+  const user_id = req.params.user_id;
 
-const loadJsonData = (filePath) => {
   try {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error(`Error loading data from ${filePath}:`, error);
-    return [];
-  }
-};
-
-const saveJsonData = (filePath, data) => {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-  } catch (error) {
-    console.error(`Error saving data to ${filePath}:`, error);
-  }
-};
-
-const getUserInventory = async (req, res) => {
-  const { user_id } = req.params;
-  try {
-    const userInventoryData = loadJsonData(userInventoryPath);
-    const allItems = loadJsonData(itemsPath); // Load all items
-
-    const inventoryWithDetails = userInventoryData
-      .filter(item => item.user_id === Number(user_id))
-      .map(inventoryItem => {
-        const itemDetail = allItems.find(item => item.item_id === inventoryItem.item_id);
-        return {
-          ...inventoryItem,
-          item_name: itemDetail ? itemDetail.name : '알 수 없는 아이템',
-          icon_url: itemDetail ? itemDetail.icon_url : null,
-        };
-      });
-
-    res.json(inventoryWithDetails);
-
+    const pool = dbManager.getPool();
+    const [rows] = await pool.query(
+      `SELECT ui.item_id, ui.quantity, i.name AS item_name, i.description
+       FROM user_inventory ui
+       JOIN items i ON ui.item_id = i.id
+       WHERE ui.user_id = ?`, [user_id]
+    );
+    res.json(rows);
   } catch (err) {
-    console.error('오류 발생:', err);
+    console.error('사용자 인벤토리 조회 오류:', err);
     res.status(500).json({ message: '인벤토리를 불러오는 데 실패했습니다.' });
   }
 };
 
-const addItemToInventory = async (req, res) => {
-  const { user_id } = req.params;
+const addItemToInventory = async (req, res, dbManager) => {
+  const user_id = req.params.user_id;
   const { item_id, quantity } = req.body;
 
-  if (!item_id || !quantity || quantity <= 0) {
-    return res.status(400).json({ message: '아이템 ID와 유효한 수량을 제공해야 합니다.' });
+  if (!item_id || quantity === undefined) {
+    return res.status(400).json({ message: '아이템 ID와 수량은 필수입니다.' });
   }
 
   try {
-    const allItems = loadJsonData(itemsPath);
-    const userInventoryData = loadJsonData(userInventoryPath);
-
-    const itemExists = allItems.some(item => item.item_id === Number(item_id));
-    if (!itemExists) {
-      return res.status(404).json({ message: '존재하지 않는 아이템입니다.' });
-    }
-
-    let itemUpdated = false;
-    const updatedInventory = userInventoryData.map(item => {
-      if (item.user_id === Number(user_id) && item.item_id === Number(item_id)) {
-        itemUpdated = true;
-        return { ...item, quantity: item.quantity + quantity };
-      }
-      return item;
-    });
-
-    if (!itemUpdated) {
-      updatedInventory.push({
-        user_id: Number(user_id),
-        item_id: Number(item_id),
-        quantity: quantity,
-      });
-    }
-
-    saveJsonData(userInventoryPath, updatedInventory);
-
-    res.status(200).json({ message: '아이템이 인벤토리에 추가/업데이트 되었습니다.' });
+    const pool = dbManager.getPool();
+    const [result] = await pool.query(
+      'INSERT INTO user_inventory (user_id, item_id, quantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)',
+      [user_id, item_id, quantity]
+    );
+    res.status(201).json({ message: '아이템이 인벤토리에 추가되었습니다.', result: result });
   } catch (err) {
-    console.error('오류 발생:', err);
-    res.status(500).json({ message: '아이템 추가/업데이트에 실패했습니다.' });
+    console.error('인벤토리 아이템 추가 오류:', err);
+    res.status(500).json({ message: '아이템을 인벤토리에 추가하는 데 실패했습니다.' });
   }
 };
 
-const updateInventoryItem = async (req, res) => {
-  const { user_id, item_id } = req.params;
+const updateInventoryItem = async (req, res, dbManager) => {
+  const user_id = req.params.user_id;
+  const { item_id } = req.params;
   const { quantity } = req.body;
 
   if (quantity === undefined || quantity < 0) {
-    return res.status(400).json({ message: '유효한 수량을 제공해야 합니다.' });
+    return res.status(400).json({ message: '수량은 0 이상이어야 합니다.' });
   }
 
   try {
-    const userInventoryData = loadJsonData(userInventoryPath);
+    const pool = dbManager.getPool();
+    const [result] = await pool.query(
+      'UPDATE user_inventory SET quantity = ? WHERE user_id = ? AND item_id = ?',
+      [quantity, user_id, item_id]
+    );
 
-    let itemFound = false;
-    const updatedInventory = userInventoryData.map(item => {
-      if (item.user_id === Number(user_id) && item.item_id === Number(item_id)) {
-        itemFound = true;
-        return { ...item, quantity: quantity };
-      }
-      return item;
-    });
-
-    if (!itemFound) {
-      return res.status(404).json({ message: '인벤토리에서 아이템을 찾을 수 없습니다.' });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '해당 아이템을 인벤토리에서 찾을 수 없습니다.' });
     }
 
-    saveJsonData(userInventoryPath, updatedInventory);
-
-    res.status(200).json({ message: '아이템 수량이 업데이트 되었습니다.' });
+    res.json({ message: '아이템 수량이 업데이트되었습니다.' });
   } catch (err) {
-    console.error('오류 발생:', err);
+    console.error('인벤토리 아이템 업데이트 오류:', err);
     res.status(500).json({ message: '아이템 수량 업데이트에 실패했습니다.' });
   }
 };
 
-const deleteInventoryItem = async (req, res) => {
-  const { user_id, item_id } = req.params;
+const deleteInventoryItem = async (req, res, dbManager) => {
+  const user_id = req.params.user_id;
+  const { item_id } = req.params;
 
   try {
-    const userInventoryData = loadJsonData(userInventoryPath);
-
-    const initialLength = userInventoryData.length;
-    const updatedInventory = userInventoryData.filter(item => 
-      !(item.user_id === Number(user_id) && item.item_id === Number(item_id))
+    const pool = dbManager.getPool();
+    const [result] = await pool.query(
+      'DELETE FROM user_inventory WHERE user_id = ? AND item_id = ?',
+      [user_id, item_id]
     );
 
-    if (updatedInventory.length === initialLength) {
-      return res.status(404).json({ message: '인벤토리에서 아이템을 찾을 수 없습니다.' });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: '해당 아이템을 인벤토리에서 찾을 수 없습니다.' });
     }
 
-    saveJsonData(userInventoryPath, updatedInventory);
-
-    res.status(200).json({ message: '아이템이 인벤토리에서 삭제되었습니다.' });
+    res.json({ message: '아이템이 인벤토리에서 삭제되었습니다.' });
   } catch (err) {
-    console.error('오류 발생:', err);
+    console.error('인벤토리 아이템 삭제 오류:', err);
     res.status(500).json({ message: '아이템 삭제에 실패했습니다.' });
   }
 };
