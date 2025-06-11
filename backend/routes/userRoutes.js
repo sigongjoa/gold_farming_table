@@ -11,5 +11,6 @@ router.delete('/:user_id/inventory/:item_id', userInventoryController.deleteInve
 
 // 제작 가능 아이템 라우트
 router.get('/:user_id/craftable-items', craftingController.getCraftableItems);
+router.get('/:user_id/missing-materials/:recipe_id', craftingController.getMissingMaterials);
 
 module.exports = router; 
