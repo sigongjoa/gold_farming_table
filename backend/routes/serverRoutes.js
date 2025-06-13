@@ -1,8 +1,11 @@
 const express = require('express');
-const serverController = require('../controllers/serverController');
+// const serverController = require('../controllers/serverController');
+
+const router = express.Router();
 
 module.exports = (dbManager) => {
-  const router = express.Router();
+  console.log('▶ serverRoutes.js loaded with dbManager');
+  const serverController = require('../controllers/serverController');
 
   // 서버 목록 조회
   router.get('/', serverController.getServers);

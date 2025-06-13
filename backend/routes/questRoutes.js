@@ -14,5 +14,11 @@ module.exports = (dbManager) => {
   router.post('/:user_id/weekly/:quest_id/complete', (req, res) => questController.completeWeeklyQuest(req, res, dbManager));
   router.post('/:user_id/weekly/reset', (req, res) => questController.resetWeeklyQuests(req, res, dbManager));
 
+  // 일일 숙제 완료
+  router.post('/:user_id/daily/complete/:quest_id', (req, res) => questController.completeDailyQuest(req, res, dbManager));
+
+  // 주간 숙제 완료
+  router.post('/:user_id/weekly/complete/:quest_id', (req, res) => questController.completeWeeklyQuest(req, res, dbManager));
+
   return router;
 }; 

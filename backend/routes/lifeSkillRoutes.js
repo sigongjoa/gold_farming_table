@@ -10,5 +10,11 @@ module.exports = (dbManager) => {
   // 캐릭터 생활스킬 레벨 업데이트
   router.post('/:character_id/:life_skill_id/update', (req, res) => lifeSkillController.updateCharacterLifeSkillLevel(req, res, dbManager));
 
+  // 서버 생활스킬 조회 (새로운 라우트)
+  router.get('/server/:server_name', (req, res) => lifeSkillController.getServerLifeSkills(req, res, dbManager));
+
+  // 서버 생활스킬 레벨 업데이트 (새로운 라우트)
+  router.post('/server/:server_name/:life_skill_id/update', (req, res) => lifeSkillController.updateServerLifeSkillLevel(req, res, dbManager));
+
   return router;
 }; 

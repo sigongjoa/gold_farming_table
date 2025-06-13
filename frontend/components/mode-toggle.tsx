@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function ModeToggle() {
+  console.debug('ModeToggle 함수 진입');
   const { setTheme } = useTheme()
+  console.debug(`setTheme 함수: ${setTheme}`);
 
   return (
     <DropdownMenu>
@@ -19,10 +21,20 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>라이트</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>다크</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>시스템</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          console.debug('라이트 테마 선택');
+          setTheme("light")
+        }}>라이트</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          console.debug('다크 테마 선택');
+          setTheme("dark")
+        }}>다크</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          console.debug('시스템 테마 선택');
+          setTheme("system")
+        }}>시스템</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
+console.debug('ModeToggle 함수 종료');

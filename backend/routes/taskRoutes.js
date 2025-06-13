@@ -3,7 +3,7 @@ const router = express.Router();
 const taskController = require('../controllers/taskController');
 
 // 새 작업 생성
-router.post('/', taskController.createTask);
+router.post('/', taskController.addTask);
 
 // 모든 작업 조회
 router.get('/', taskController.getAllTasks);
@@ -15,7 +15,7 @@ router.get('/character/:characterId', taskController.getCharacterTasks);
 router.get('/all-character-status', taskController.getTasksForAllCharacters);
 
 // 특정 캐릭터의 작업 완료 상태 업데이트 또는 삽입
-router.put('/:taskId/character/:characterId', taskController.updateCharacterTaskCompletion);
+router.put('/:taskId/character/:characterId', taskController.toggleTaskCompletion);
 
 // 작업 삭제
 router.delete('/:taskId', taskController.deleteTask);
